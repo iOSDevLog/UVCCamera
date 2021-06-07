@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <linux/time.h>
 #include <unistd.h>
+#include <stdio.h>
 
 #if 1	// set 1 if you don't need debug log
 	#ifndef LOG_NDEBUG
@@ -183,7 +184,7 @@ int UVCPreview::setPreviewSize(int width, int height, int min_fps, int max_fps, 
 		result = uvc_get_stream_ctrl_format_size_fps(mDeviceHandle, &ctrl,
 		    UVC_FRAME_FORMAT_H264,
 			// !requestMode ? UVC_FRAME_FORMAT_YUYV : UVC_FRAME_FORMAT_MJPEG,
-			848, 480, requestMinFps, requestMaxFps);
+			1920, 1080, requestMinFps, requestMaxFps);
 	}
 	
 	RETURN(result, int);
@@ -397,7 +398,13 @@ void UVCPreview::uvc_preview_frame_callback(uvc_frame_t *frame, void *vptr_args)
         frame->height);
 #endif
 	UVCPreview *preview = reinterpret_cast<UVCPreview *>(vptr_args);
-
+#if 1
+    char *fileName = "/tmp/1920x1080.h264";
+    FILE *fp = fopen(fileName, "a+");
+    fwrite(frame->data, frame->actual_bytes, 1, fp);
+    fclose(fp);
+#endif
+#if 0
     JavaVM *vm = getVM();
     JNIEnv *env;
     // attach to JavaVM
@@ -411,7 +418,7 @@ void UVCPreview::uvc_preview_frame_callback(uvc_frame_t *frame, void *vptr_args)
     }
     // detach from JavaVM
     vm->DetachCurrentThread();
-
+#endif
 #if 0
 	if UNLIKELY(!preview->isRunning() || !frame || !frame->frame_format || !frame->data || !frame->data_bytes) return;
 	if (UNLIKELY(
@@ -505,7 +512,7 @@ int UVCPreview::prepare_preview(uvc_stream_ctrl_t *ctrl) {
 	result = uvc_get_stream_ctrl_format_size_fps(mDeviceHandle, ctrl,
 	    UVC_FRAME_FORMAT_H264,
 		// !requestMode ? UVC_FRAME_FORMAT_YUYV : UVC_FRAME_FORMAT_MJPEG,
-		848, 480, requestMinFps, requestMaxFps
+		1920, 1080, requestMinFps, requestMaxFps
 	);
 	if (LIKELY(!result)) {
 #if LOCAL_DEBUG

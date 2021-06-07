@@ -83,8 +83,8 @@ public class MainActivity extends BaseActivity implements CameraDialog.CameraDia
 
 	// Video Constants
 	private final static String MIME_TYPE = "video/avc"; // H.264 Advanced Video
-	private final static int VIDEO_WIDTH = 848;
-	private final static int VIDEO_HEIGHT = 480;
+	private final static int VIDEO_WIDTH = 1920;
+	private final static int VIDEO_HEIGHT = 1080;
 	private final static int TIME_INTERNAL = 30;
 	private final static int HEAD_OFFSET = 0;
 
@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity implements CameraDialog.CameraDia
 
 		mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
 		mReadButton = (Button) findViewById(R.id.btn_readfile);
+		mReadButton.setVisibility(View.GONE);
 
 		initH264();
 	}
@@ -338,7 +339,7 @@ public class MainActivity extends BaseActivity implements CameraDialog.CameraDia
 		@Override
 		public void onClick(final View view) {
 			if (!isInit) {
-				initDecoder();
+//				initDecoder();
 				isInit = true;
 			}
 
